@@ -1,10 +1,10 @@
 """C++ implementation of the llama grammar parser."""
-# flake8: noqa
-from pathlib import Path
 import sys
 from ctypes import *  # type: ignore
 from enum import Enum
 from itertools import islice
+# flake8: noqa
+from pathlib import Path
 from typing import (
     Callable,
     Generic,
@@ -1031,10 +1031,10 @@ def print_grammar_char(file: TextIO, c: int) -> None:
 # }
 def is_char_element(elem: LlamaGrammarElement) -> bool:
     return elem.type in (
-        llama_gretype.LLAMA_GRETYPE_CHAR.value,
-        llama_gretype.LLAMA_GRETYPE_CHAR_NOT.value,
-        llama_gretype.LLAMA_GRETYPE_CHAR_ALT.value,
-        llama_gretype.LLAMA_GRETYPE_CHAR_RNG_UPPER.value,
+        llama_gretype.LLAMA_GRETYPE_CHAR,
+        llama_gretype.LLAMA_GRETYPE_CHAR_NOT,
+        llama_gretype.LLAMA_GRETYPE_CHAR_ALT,
+        llama_gretype.LLAMA_GRETYPE_CHAR_RNG_UPPER,
     )
 
 
@@ -1054,7 +1054,7 @@ def print_rule(
     #             "malformed rule, does not end with LLAMA_GRETYPE_END: " + std::to_string(rule_id));
     #     }
     #     fprintf(file, "%s ::= ", symbol_id_names.at(rule_id).c_str());
-    if rule.empty() or rule.back().type != llama_gretype.LLAMA_GRETYPE_END.value:
+    if rule.empty() or rule.back().type is not llama_gretype.LLAMA_GRETYPE_END:
         raise RuntimeError(
             "malformed rule, does not end with LLAMA_GRETYPE_END: " + str(rule_id)
         )
@@ -1100,7 +1100,7 @@ def print_rule(
     #         }
     for i, elem in enumerate(rule[:-1]):
         case = elem.type  # type: llama_gretype
-        if case is llama_gretype.LLAMA_GRETYPE_END.value:
+        if case is llama_gretype.LLAMA_GRETYPE_END:
             raise RuntimeError("unexpected end of rule: " + str(rule_id) + "," + str(i))
         elif case is llama_gretype.LLAMA_GRETYPE_ALT:
             print("| ", file=file, end="")
@@ -1140,8 +1140,8 @@ def print_rule(
         #             fprintf(file, "] ");
         if is_char_element(elem):
             if rule[i + 1].type in (
-                llama_gretype.LLAMA_GRETYPE_CHAR_ALT.value,
-                llama_gretype.LLAMA_GRETYPE_CHAR_RNG_UPPER.value,
+                    llama_gretype.LLAMA_GRETYPE_CHAR_ALT,
+                    llama_gretype.LLAMA_GRETYPE_CHAR_RNG_UPPER,
             ):
                 pass
             else:
